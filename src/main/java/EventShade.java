@@ -94,9 +94,10 @@ public class EventShade {
 	}
 	
 	public void findDuration(){
-		
-		duration = endTime.get(Calendar.HOUR_OF_DAY) - startTime.get(Calendar.HOUR_OF_DAY);
-		
+			duration = endTime.get(Calendar.HOUR_OF_DAY) - startTime.get(Calendar.HOUR_OF_DAY);
+			if(duration < 0){
+				duration += 24;
+			}
 	}
 	
 	public int getStartAngle(){

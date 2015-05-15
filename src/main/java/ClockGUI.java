@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -35,10 +37,14 @@ public class ClockGUI extends JFrame {
 	AlphaComposite composite = AlphaComposite.getInstance(type, alpha);
 	
 	List <EventShade> eventShades = new ArrayList<>();
-	colors[] = [new Color(1,0,0,alpha)]; 
+	
 	double piOverThirty = Math.PI / 30;
 	double piOverTwo =  Math.PI / 2;
 	double piOverSix = Math.PI / 6;
+	
+	Color[] colorArray;
+	
+	int count = 0;
 	
 	int currentSeconds;
 	int currentHour;
@@ -57,6 +63,20 @@ public class ClockGUI extends JFrame {
 	int hourY;
 	
 	public ClockGUI(List<EventShade> eventShades) {
+		
+		colorArray = new Color[10];
+		
+		colorArray[0] = new Color(0,0,1, alpha); //blue
+		colorArray[1] = new Color(1,0,0, alpha); //red
+		colorArray[2] = new Color(0,1,0, alpha); //green
+		colorArray[3] = new Color(1,1,.2f, alpha); //yellow
+		colorArray[4] = new Color(.8f,0,.8f, alpha); //purple
+		colorArray[5] = new Color(1,.5f,0, alpha); //orange
+		colorArray[6] = new Color(.5f,.5f,.5f, alpha); // grey
+		colorArray[7] = new Color(.4f,1,1, alpha); // skyBlue
+		colorArray[8] = new Color(.4f,0,0, alpha); //crimson
+		colorArray[9] = new Color(0,.4f,0, alpha); //darkGreen
+		
 		this.eventShades = eventShades;
 		for (EventShade event: eventShades){
 			System.out.println(event.toString());
@@ -120,10 +140,9 @@ public class ClockGUI extends JFrame {
 		hour2D.drawLine(centerX, centerY, hourX, hourY);
 	}
 	
-	private void drawArc(Graphics2D arc2D, float alpha, int startAngle, int endAngle){
-		
-		Color transArc = new Color(1,1,1,alpha); //Transparent Red for Arc fill
-		arc2D.setColor(transArc);
+	private void drawArc(Graphics2D arc2D, Color color, int startAngle, int endAngle){
+
+		arc2D.setColor(color);
 		arc2D.fillArc(63, 71, 224, 224, startAngle , endAngle);
 	}
 	
@@ -138,8 +157,12 @@ public class ClockGUI extends JFrame {
 		g2.drawImage(image , 25, 40, null);
 		
 		for (EventShade event: eventShades){
-			drawArc(g2, alpha, event.getStartAngle(),event.getEndAngle() );
+			if (count < colorArray.length) {
+				drawArc(g2, colorArray[count] , event.getStartAngle(),event.getEndAngle() );
+				count += 1;
+			} else{count = 0;}
 		}
+		count = 0;
 		drawSecondHand(g2);
 		drawMinuteHand(g2);
 		drawHourHand(g2);
